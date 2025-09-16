@@ -3,7 +3,6 @@ import os
 from datetime import datetime, timedelta
 from typing import Dict, Any
 from vertexai.preview import generative_models as genai  # Gemini
-from langgraph.graph import StateGraph, END
 
 import google.auth
 from google.adk.agents import Agent
@@ -54,7 +53,7 @@ class FocusFlowAgent:
         if energy == "low":
             suggestion = "Do a quick 10–15 min task like clearing emails or tidying your desk."
             self.tasks["low_count"] += 1
-            if self.tasks["low_count"] >= 3:  # LangGraph branch: too many lows
+            if self.tasks["low_count"] >= 3:  # too many lows → suggest break
                 multimodal_tip = "🌬️ Try a 2-min breathing exercise to recharge."
         elif energy == "medium":
             suggestion = "Do a 25–30 min focus block, like writing a draft or coding a feature."
@@ -106,3 +105,10 @@ class FocusFlowAgent:
             f"You’ve completed {completed}/{suggested} tasks. "
             f"🔥 Current Flow Streak: {streak} days. Keep it up!"
         )
+
+root_agent = Agent(
+    name="root_agent",
+    model="gemini-2.5-flash",
+    instruction="You are a helpful AI assistant designed to provide accurate and useful information.",
+    tools=[get_weather, get_current_time],
+)
