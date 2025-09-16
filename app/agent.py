@@ -31,14 +31,21 @@ def save_tasks(data):
 # Gemini Helper
 # -----------------------------
 def rephrase_with_gemini(base_suggestion: str) -> str:
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    prompt = f"""
-    Rephrase this productivity suggestion in an upbeat, motivational way,
-    keeping it short and friendly:
-    "{base_suggestion}"
-    """
-    response = model.generate_content(prompt)
-    return response.text.strip()
+    try:
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        prompt = f"""
+        Rephrase this productivity suggestion in an upbeat, motivational way,
+        keeping it short and friendly:
+        "{base_suggestion}"
+        """
+        response = model.generate_content(prompt)
+        if hasattr(response, "text") and response.text:
+            return response.text.strip()
+        else:
+            return base_suggestion  # fallback
+    except Exception as e:
+        print(f"[Gemini Error] {e}")
+        return base_suggestion
 
 # -----------------------------
 # Agent Logic
