@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Any
 from vertexai.preview import generative_models as genai  # Gemini
 
+
 import google.auth
 from google.adk.agents import Agent
 
@@ -53,7 +54,7 @@ def rephrase_with_gemini(base_suggestion: str) -> str:
 class FocusFlowAgent:
     def __init__(self):
         self.tasks = load_tasks()
-
+    
     def suggest_task(self, energy: str) -> str:
         """Suggest task block based on energy, with Gemini rephrasing + multimodal tips."""
         multimodal_tip = ""
@@ -113,8 +114,6 @@ class FocusFlowAgent:
             f"🔥 Current Flow Streak: {streak} days. Keep it up!"
         )
 
-from google.adk.agents import Agent
-from app.focusflow import FocusFlowAgent  # import your custom class
 
 focus_agent = FocusFlowAgent()
 
