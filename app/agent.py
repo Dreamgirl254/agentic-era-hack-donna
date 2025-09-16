@@ -113,9 +113,23 @@ class FocusFlowAgent:
             f"🔥 Current Flow Streak: {streak} days. Keep it up!"
         )
 
+from google.adk.agents import Agent
+from app.focusflow import FocusFlowAgent  # import your custom class
+
+focus_agent = FocusFlowAgent()
+
+# Wrap it in an ADK Agent
 root_agent = Agent(
-    name="root_agent",
-    model="gemini-2.5-flash",
-    instruction="You are a helpful AI assistant designed to provide accurate and useful information.",
-    tools=[get_weather, get_current_time],
+    name="focus_flow_agent",
+    model="gemini-2.5-flash",  # pick flash for speed
+    instruction=(
+        "You are Focus Flow, a personal time coach. "
+        "You suggest tasks based on the user's energy level, "
+        "track completed tasks, and encourage streaks."
+    ),
+    tools=[
+        focus_agent.suggest_task,
+        focus_agent.mark_completed,
+        focus_agent.get_summary
+    ]
 )
